@@ -1,9 +1,11 @@
-# 首个公开源码预览
+# 源码预览 · v1.3.0-preview.1
 
-项目作者：FuFu
+发布于 2026-09-10。
 
-这是粉色陪伴界面的开发预览，包含完整聊天、记忆与日记浏览、角色设置和可选 Live2D 导入。截图使用示例数据。
+樱花粉的 AI 桌面陪伴应用，包含聊天、回忆、日记、角色设置和可选 Live2D 形象。
 
-此包未附带 Windows 安装程序，也未完成干净安装、实际桌面与真实 AI 服务的端到端验收。依赖锁文件仍需同步，当前安装使用 pnpm install --no-frozen-lockfile。打包配置仍待移除旧环境的 electronDist 路径后再验证。
+- 从源码启动：[开始使用](README.md#开始相伴)。
+- 添加角色形象：[运行库安装](docs/runtime-setup.md)与[模型导入](docs/model-import.md)。
+- 当前提供源码预览，暂不提供 Windows 安装包；后续进度见[发布检查清单](docs/release-checklist.md)。
 
-建议以 GitHub Pre-release 发布此预览，后续正式版本单独附带经过测试的安装程序。
+**Author · FuFu**

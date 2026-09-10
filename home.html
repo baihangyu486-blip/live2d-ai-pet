@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: file:; media-src 'self' data: file: blob:; connect-src 'self' file:; frame-src 'self'; object-src 'none'; base-uri 'none'">
+  <title>AI 伴侣 · AI Companion</title>
+  <link rel="stylesheet" href="./src/renderer/home.css">
+</head>
+<body>
+  <svg class="icon-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="icon-heart" viewBox="0 0 24 24"><path d="M20.7 4.7a5.7 5.7 0 0 0-8.1 0L12 5.4l-.7-.7a5.7 5.7 0 0 0-8 8L12 21l8.7-8.3a5.7 5.7 0 0 0 0-8Z"/></symbol>
+    <symbol id="icon-chat" viewBox="0 0 24 24"><path d="M20 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.5 0-3-.4-4.3-1L3 20l1.1-4.2A8.5 8.5 0 1 1 20 11.5Z"/><path d="M7.5 10h8M7.5 14h5"/></symbol>
+    <symbol id="icon-book" viewBox="0 0 24 24"><path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1 3-2 6-2 9-1V4c-3-1-6-1-9 1Zm0 0v15"/></symbol>
+    <symbol id="icon-star" viewBox="0 0 24 24"><path d="m12 3 2.6 6.4L21 12l-6.4 2.6L12 21l-2.6-6.4L3 12l6.4-2.6Z"/></symbol>
+    <symbol id="icon-settings" viewBox="0 0 24 24"><path d="m9 3-1 3-3 1 1 3-2 2 2 2-1 3 3 1 1 3h6l1-3 3-1-1-3 2-2-2-2 1-3-3-1-1-3Z"/><circle cx="12" cy="12" r="3"/></symbol>
+  </defs></svg>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#home" aria-label="AI 伴侣首页"><span class="brand-mark"><svg><use href="#icon-heart"/></svg></span><span><strong>AI 伴侣</strong><small>A LITTLE CLOSER ♡</small></span></a>
+      <button class="character-switch" data-page="room" aria-label="查看当前角色"><span class="character-avatar" id="character-initial">♡</span><span><strong id="character-name">我的伙伴</strong><small>专属陪伴</small></span><span class="character-chevron">⌄</span></button>
+      <nav aria-label="主导航">
+        <button class="nav-item selected" data-page="home" aria-current="page"><svg><use href="#icon-chat"/></svg><span>陪伴</span><small>一起聊聊</small></button>
+        <button class="nav-item" data-page="memory"><svg><use href="#icon-book"/></svg><span>回忆</span><small>小事收藏夹</small></button>
+        <button class="nav-item" data-page="room"><svg><use href="#icon-star"/></svg><span>角色</span><small>你的理想模样</small></button>
+      </nav>
+      <div class="sidebar-note" aria-hidden="true"><span>♡</span><p>普通的一天，<br>也想认真陪你。</p><i>made of little moments</i></div>
+      <div class="sidebar-bottom"><button class="nav-item" data-action="settings"><svg><use href="#icon-settings"/></svg><span>设置</span></button><p class="author">WITH LOVE · FuFu</p></div>
+    </aside>
+    <div class="workspace">
+      <header class="titlebar"><span class="breadcrumb" id="breadcrumb">陪伴</span><span class="window-subtitle">属于我们的日常 <span>♡</span></span><div class="window-actions"><button id="refresh" aria-label="刷新状态">↻</button><button data-action="minimize" aria-label="最小化">−</button><button data-action="close" aria-label="收起到托盘">×</button></div></header>
+      <main id="main-content">
+        <div id="demo-notice" class="demo-notice" hidden>设计预览 · 示例对话与记录，不会修改你的真实数据</div>
+        <div id="load-error" class="error-banner" role="alert" hidden>暂时没能读到陪伴状态。已显示的记录会保留，请刷新重试。</div>
+        <section class="page companion-page" id="page-home" aria-label="陪伴聊天">
+          <div class="conversation"><iframe id="chat-frame" title="与当前角色聊天" allow="microphone" referrerpolicy="no-referrer"></iframe></div>
+          <aside class="companion-aside" aria-label="陪伴状态">
+            <details class="companion-details" open>
+              <summary><span><svg><use href="#icon-heart"/></svg>陪伴状态</span><span class="chevron">⌄</span></summary>
+              <div class="state-content">
+                <div class="mood-caption"><span>此刻心情</span><span id="mood-label" class="mood-pill">—</span></div><p id="mood-summary" class="mood-message">一起慢慢认识彼此。</p>
+                <div class="relationship-heading"><span>我们的关系</span><strong id="relationship-title">—</strong></div><p id="relationship-description" class="muted">每一次聊天，都是靠近一点。</p><div class="affection-line"><progress id="affection-progress" max="100" value="0" aria-label="亲密度"></progress><span id="affection-value">—</span></div><p id="relationship-next" class="tiny"></p>
+                <div class="energy-line"><span>今日精力</span><span id="energy-numeric">—</span></div>
+                <button class="checkin-button" id="checkin" disabled>正在读取…</button><p id="checkin-note" class="tiny checkin-note">每次见面，都有意义。</p>
+              </div>
+            </details>
+            <section class="diary-note"><span class="note-pin" aria-hidden="true">♡</span><p class="eyebrow">日记里的一句话</p><p id="diary-preview" class="diary-excerpt">还没有写下日记。故事可以从今天开始。</p><button class="text-button" id="open-diary">去回忆里看看 →</button></section>
+            <div class="presence-control"><span><i class="status-dot"></i><span id="presence-label">今天，也在这里</span></span><button class="text-button" id="pause-proactive" disabled>正在读取…</button></div>
+          </aside>
+        </section>
+        <section class="page reading-page" id="page-memory" aria-label="回忆" hidden>
+          <div class="page-heading"><div><p class="eyebrow">OUR LITTLE KEEPSAKES</p><h1>被认真记住的小事<span> ♡</span></h1><p class="subtitle">你的喜好，聊过的日常，还有一起走过的时间。</p></div><span class="count-pill" id="memory-count">— 条记忆</span></div>
+          <div class="section-tabs" role="tablist" aria-label="回忆分类"><button id="tab-memories" role="tab" aria-selected="true" aria-controls="memory-panel" data-book-tab="memories">记忆</button><button id="tab-diaries" role="tab" aria-selected="false" aria-controls="diary-panel" data-book-tab="diaries">日记与时光</button></div>
+          <div id="memory-panel" role="tabpanel" aria-labelledby="tab-memories"><div class="memory-toolbar" role="group" aria-label="记忆筛选"><button class="filter-button active" data-memory-filter="all" aria-pressed="true">全部小事</button><button class="filter-button" data-memory-filter="pinned" aria-pressed="false">♡ 已置顶</button></div><div class="memory-grid" id="memory-list"></div></div>
+          <div id="diary-panel" role="tabpanel" aria-labelledby="tab-diaries" hidden><div id="timeline-list" class="timeline-list"></div></div>
+        </section>
+        <section class="page reading-page" id="page-room" aria-label="角色与形象" hidden>
+          <div class="page-heading"><div><p class="eyebrow">YOUR COMPANION, YOUR WAY</p><h1>给陪伴，选一个模样<span> ✧</span></h1><p class="subtitle">Live2D 是可选的形象。没有模型，也可以好好聊天。</p></div></div>
+          <div class="character-layout">
+            <div id="character-stage" class="character-stage"><div class="preview-label">形象预览</div><canvas id="home-live2d" role="img" aria-label="当前 Live2D 形象预览" hidden></canvas><div id="model-empty" class="model-empty"><div class="heart-mascot" aria-hidden="true"><svg><use href="#icon-heart"/></svg><i>✦</i><b>✧</b></div><h2>先聊聊，也很好呀。</h2><p>想让陪伴有个模样时，<br>再导入你喜欢的 Live2D 模型。</p></div><div id="model-fallback" class="model-fallback" role="status" hidden></div></div>
+            <div class="character-options"><section class="option-section"><div class="option-heading"><h2>Live2D 形象</h2><span class="optional-label">可选</span></div><p class="muted" id="model-current">当前未使用模型</p><button class="primary-button" id="import-model">＋ 导入模型</button><button class="secondary-button" id="disable-model" aria-pressed="true">♡ 不使用 Live2D</button><p class="tiny">支持 .model3.json 及关联文件。请保留模型原始目录结构。</p><label class="field-label" for="model-select">已导入的模型</label><select id="model-select" disabled><option value="">暂无已导入模型</option></select><p class="model-note">切换形象不会改变人设、记忆或聊天记录。</p></section><section class="option-section persona-section"><h2>人设与称呼</h2><p class="muted">形象之外，也有你熟悉的性格。</p><div class="persona-row"><span class="character-avatar" id="persona-initial">♡</span><div><strong id="persona-name">我的伙伴</strong><p>称呼、性格、回复习惯</p></div></div><button class="text-button" data-action="settings">编辑人设与称呼 →</button></section></div>
+          </div>
+        </section>
+        <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+      </main>
+    </div>
+  </div>
+  <script src="./src/renderer/home-stage.js"></script>
+  <script src="./src/renderer/home.js"></script>
+</body>
+</html>

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: file:; media-src 'self' data: file: blob:; connect-src 'self';" />
+  <title>设置 · AI 伴侣</title>
+
+  <link rel="stylesheet" href="./src/renderer/panel.css" />
+</head>
+
+<body>
+  <div id="panel">
+    <header class="panel-title">
+      <div class="panel-heading"><span class="brand-heart" aria-hidden="true">♡</span><span>陪伴偏好<small>AI 伴侣 · AI Companion</small></span></div>
+      <button id="btn-close-panel" class="secondary">关闭</button>
+    </header>
+    <div class="settings-layout">
+      <nav class="settings-nav" role="tablist" aria-label="设置分类" aria-orientation="vertical">
+        <button id="tab-connection" class="settings-tab" role="tab" aria-selected="true" aria-controls="settings-connection" tabindex="0" data-category="connection"><span>连接</span><small>AI 服务</small></button>
+        <button id="tab-character" class="settings-tab" role="tab" aria-selected="false" aria-controls="settings-character" tabindex="-1" data-category="character"><span>角色</span><small>人设与形象</small></button>
+        <button id="tab-companion" class="settings-tab" role="tab" aria-selected="false" aria-controls="settings-companion" tabindex="-1" data-category="companion"><span>陪伴</span><small>互动与羁绊</small></button>
+        <button id="tab-memory" class="settings-tab" role="tab" aria-selected="false" aria-controls="settings-memory" tabindex="-1" data-category="memory"><span>记忆</span><small>回忆与知识</small></button>
+        <button id="tab-chat" class="settings-tab" role="tab" aria-selected="false" aria-controls="settings-chat" tabindex="-1" data-category="chat"><span>聊天</span><small>会话与表情</small></button>
+        <button id="tab-voice" class="settings-tab" role="tab" aria-selected="false" aria-controls="settings-voice" tabindex="-1" data-category="voice"><span>声音</span><small>倾听与回复</small></button>
+        <button id="tab-app" class="settings-tab" role="tab" aria-selected="false" aria-controls="settings-app" tabindex="-1" data-category="app"><span>应用</span><small>启动与存储</small></button>
+      </nav>
+      <main class="panel-content">
+        <div id="settings-connection" class="settings-pane" role="tabpanel" aria-labelledby="tab-connection" tabindex="0">
+<div class="section">
+        <div class="section-head">
+          <h3>模型服务</h3>
+          <span class="section-desc">AI 大脑连接</span>
+        </div>
+
+        <div class="sub-title">服务连接</div>
+        <label class="field-label" for="ai-base-url">服务地址</label>
+        <input id="ai-base-url" placeholder="https://example.com/v1" />
+        <label class="field-label" for="ai-api-key">访问密钥（API Key）</label>
+        <input id="ai-api-key" type="password" placeholder="API Key" />
+
+        <div class="sub-title">对话模型</div>
+        <label class="field-label" for="ai-model">模型选择</label>
+        <select id="ai-model"></select>
+        <label class="field-label" for="ai-model-manual">手动模型 ID</label>
+        <input id="ai-model-manual" placeholder="例如 gpt-4o-mini / deepseek-chat" />
+
+        <div class="button-list">
+          <button id="btn-refresh-models">刷新模型</button>
+          <button id="btn-test-connection">测试连接</button>
+          <button id="btn-save-ai" class="primary" hidden>保存设置</button>
+        </div>
+
+        <div id="ai-status" class="status"></div>
+      </div>
+        </div>
+        <div id="settings-character" class="settings-pane" role="tabpanel" aria-labelledby="tab-character" tabindex="0" hidden>
+<div class="section">
+        <div class="section-head">
+          <h3>角色与对话</h3>
+          <span class="section-desc">人设、模板与生成控制</span>
+        </div>
+
+        <div class="sub-title">人设方案</div>
+        <label class="field-label" for="preset-select">一键切换整套人设</label>
+        <select id="preset-select"></select>
+        <div id="preset-description" class="tiny-note"></div>
+        <div class="button-list">
+          <button id="btn-apply-preset" class="primary">应用人设</button>
+          <button id="btn-restore-preset-backup" class="secondary" disabled>还原上一版人设</button>
+        </div>
+
+        <label class="field-label" for="preset-new-name">保存当前设定为新方案</label>
+        <input id="preset-new-name" placeholder="方案名称，例如：傲娇青梅" />
+        <input id="preset-new-desc" placeholder="简短描述（可选）" />
+        <div class="button-list">
+          <button id="btn-save-as-preset">保存为新方案</button>
+        </div>
+        <div id="preset-status" class="status"></div>
+
+        <div class="sub-title">人设档案</div>
+        <label class="field-label" for="char-name">角色名称</label>
+        <input id="char-name" placeholder="为你的角色取个名字" />
+        <label class="field-label" for="char-identity">身份定位</label>
+        <input id="char-identity" placeholder="角色身份说明" />
+        <label class="field-label" for="char-appearance">外貌印象</label>
+        <textarea id="char-appearance" placeholder="外貌特征、整体印象"></textarea>
+        <label class="field-label" for="char-personality">性格底色</label>
+        <textarea id="char-personality" placeholder="性格、情绪倾向"></textarea>
+        <label class="field-label" for="char-habits">日常习惯</label>
+        <textarea id="char-habits" placeholder="日常习惯、常见反应和小动作"></textarea>
+        <label class="field-label" for="char-preferences">偏好与雷区</label>
+        <textarea id="char-preferences" placeholder="喜欢的事物、讨厌或需要避开的内容"></textarea>
+        <label class="field-label" for="char-speaking-style">表达风格</label>
+        <textarea id="char-speaking-style" placeholder="用语、句长、交流习惯"></textarea>
+        <label class="field-label" for="char-relationship">关系定位</label>
+        <textarea id="char-relationship" placeholder="角色与用户之间的关系"></textarea>
+        <label class="field-label" for="char-addressing">称呼方式</label>
+        <input id="char-addressing" placeholder="如何称呼用户，用户如何称呼角色" />
+        <label class="field-label" for="char-rules">行为边界</label>
+        <textarea id="char-rules" placeholder="需要遵守或避免的行为"></textarea>
+
+        <div class="sub-title">生成控制</div>
+        <label class="field-label" for="generation-preset">预设档位</label>
+        <select id="generation-preset">
+          <option value="stable">稳妥（稳定、克制）</option>
+          <option value="balanced">均衡（推荐）</option>
+          <option value="lively">活泼（话多、跳脱）</option>
+        </select>
+        <details id="generation-advanced">
+          <summary>高级参数</summary>
+          <div class="inline-grid">
+            <div>
+              <label class="field-label" for="generation-temperature">温度</label>
+              <input id="generation-temperature" type="number" min="0" max="2" step="0.05" />
+            </div>
+            <div>
+              <label class="field-label" for="generation-top-p">Top P</label>
+              <input id="generation-top-p" type="number" min="0" max="1" step="0.05" />
+            </div>
+            <div>
+              <label class="field-label" for="generation-frequency">频率惩罚</label>
+              <input id="generation-frequency" type="number" min="-2" max="2" step="0.05" />
+            </div>
+            <div>
+              <label class="field-label" for="generation-presence">存在惩罚</label>
+              <input id="generation-presence" type="number" min="-2" max="2" step="0.05" />
+            </div>
+          </div>
+          <label class="field-label" for="generation-max-tokens">单次输出上限（Token）</label>
+          <input id="generation-max-tokens" type="number" min="64" max="8192" step="64" />
+          <label class="check-row"><input id="generation-reasoning" type="checkbox" />深度思考（思维链）</label>
+        </details>
+      </div>
+<div class="section">
+        <div class="section-head">
+          <h3>Live2D 形象</h3>
+          <span class="section-desc">可选的桌面陪伴形象</span>
+        </div>
+
+        <p class="section-intro">给陪伴选一个喜欢的模样。形象可随时更换，角色设定与聊天记忆独立保存。</p>
+        <div class="sub-title">模型管理</div>
+        <div class="quick-control-grid">
+          <button id="btn-smaller" class="quick-control">
+            <span class="quick-icon">−</span>
+            <span class="quick-text">
+              <strong>缩小形象</strong>
+              <em>让形象更轻盈</em>
+            </span>
+          </button>
+          <button id="btn-bigger" class="quick-control">
+            <span class="quick-icon">＋</span>
+            <span class="quick-text">
+              <strong>放大形象</strong>
+              <em>靠近一点</em>
+            </span>
+          </button>
+        </div>
+        <div id="model-current" class="model-current">正在加载模型信息…</div>
+        <div class="button-list">
+          <button id="btn-import-model">导入模型</button>
+          <button id="btn-reset-model" class="secondary">不使用 Live2D</button>
+        </div>
+        <label class="field-label" for="imported-model-select">已导入的形象</label>
+        <div class="path-row">
+          <select id="imported-model-select" aria-label="已导入的 Live2D 形象"></select>
+          <button id="btn-select-model" class="secondary">使用</button>
+        </div>
+        <div id="model-status" class="status" role="status"></div>
+
+        <div class="sub-title">表情神态</div>
+        <div id="face-list" class="button-list"></div>
+
+        <div class="sub-title">发型外观</div>
+        <div id="look-list" class="button-list"></div>
+
+        <div class="sub-title">姿势体态</div>
+        <div id="pose-list" class="button-list"></div>
+
+        <div class="sub-title">动作演出</div>
+        <div id="motion-list" class="button-list"></div>
+      </div>
+        </div>
+        <div id="settings-companion" class="settings-pane" role="tabpanel" aria-labelledby="tab-companion" tabindex="0" hidden>
+<div class="section">
+        <div class="section-head">
+          <h3>陪伴机制</h3>
+          <span class="section-desc">她如何主动靠近你</span>
+        </div>
+
+        <div class="sub-title">回复模式</div>
+        <div class="radio-row" id="reply-mode-row">
+          <label><input type="radio" name="reply-mode" value="smart" />智能对话</label>
+          <label><input type="radio" name="reply-mode" value="light" />轻量回复</label>
+          <label><input type="radio" name="reply-mode" value="quiet" />静音陪伴</label>
+        </div>
+        <div class="tiny-note">智能＝完整 AI；轻量＝更短的 AI 回复；静音＝不调 AI，只做即时回复和陪伴短句。</div>
+
+        <label class="field-label">主动程度</label>
+        <div class="radio-row" id="proactive-intensity-row">
+          <label><input type="radio" name="proactive-intensity" value="quiet" />安静</label>
+          <label><input type="radio" name="proactive-intensity" value="normal" />适中</label>
+          <label><input type="radio" name="proactive-intensity" value="lively" />活泼</label>
+        </div>
+        <div class="tiny-note">安静＝少打扰；适中＝自然节奏；活泼＝更愿意主动找你。</div>
+
+        <div class="sub-title">主动互动</div>
+        <label class="check-row"><input id="proactive-enabled" type="checkbox" />轻量问候（可爱短句，不费 token）</label>
+        <div class="inline-grid">
+          <div>
+            <label class="field-label" for="proactive-min">最短间隔（秒）</label>
+            <input id="proactive-min" type="number" min="60" max="3600" step="10" />
+          </div>
+          <div>
+            <label class="field-label" for="proactive-max">最长间隔（秒）</label>
+            <input id="proactive-max" type="number" min="60" max="7200" step="10" />
+          </div>
+        </div>
+        <label class="check-row"><input id="initiative-enabled" type="checkbox" />智能主动聊天（AI 发起话题）</label>
+        <div class="inline-grid">
+          <div>
+            <label class="field-label" for="initiative-min">最短间隔（秒）</label>
+            <input id="initiative-min" type="number" min="120" max="7200" step="60" />
+          </div>
+          <div>
+            <label class="field-label" for="initiative-max">最长间隔（秒）</label>
+            <input id="initiative-max" type="number" min="120" max="10800" step="60" />
+          </div>
+        </div>
+        <div class="button-list">
+          <button id="btn-pause-proactive" class="secondary">暂停主动互动</button>
+        </div>
+
+        <div class="sub-title">环境感知</div>
+        <label class="check-row"><input id="activity-enabled" type="checkbox" />窗口活动识别（读取前台窗口标题，仅本机）</label>
+        <label class="check-row"><input id="stealth-enabled" type="checkbox" />隐私保护（截图 / 录屏时自动隐身）</label>
+        <label class="check-row"><input id="perception-enabled" type="checkbox" />实时感知（自动观察当前窗口，本地处理）</label>
+        <label class="check-row"><input id="deep-chat-reading" type="checkbox" />深度感知（可读懂聊天内容，仅本机，不存长期记忆）</label>
+        <label class="field-label" for="capture-interval">感知频率</label>
+        <select id="capture-interval">
+          <option value="3">快（3 秒）</option>
+          <option value="5">适中（5 秒）</option>
+          <option value="10">省资源（10 秒）</option>
+        </select>
+
+        <div id="companion-status" class="status"></div>
+      </div>
+<div class="section">
+        <div class="section-head">
+          <h3>羁绊养成</h3>
+          <span class="section-desc">关系成长与纪念</span>
+        </div>
+
+        <div class="sub-title">羁绊值</div>
+        <div id="affection-display" class="affection-display">
+          <div class="affection-emoji">🌱</div>
+          <div class="affection-info">
+            <div class="affection-title">初识</div>
+            <div class="affection-bar"><div class="affection-bar-fill" style="width: 0%"></div></div>
+          </div>
+        </div>
+
+        <div class="sub-title">每日相伴</div>
+        <div id="checkin-line" class="status">还没打卡</div>
+        <div class="button-list">
+          <button id="btn-checkin-now">今日相伴</button>
+        </div>
+        <div class="tiny-note">连续 7 / 30 / 100 / 365 天有额外羁绊奖励。</div>
+
+        <div class="sub-title">重要纪念日</div>
+        <div id="anniversary-list" class="memory-list"></div>
+        <div class="inline-grid">
+          <div>
+            <label class="field-label" for="anni-name">名称</label>
+            <input id="anni-name" placeholder="例如：在一起 100 天" />
+          </div>
+          <div>
+            <label class="field-label" for="anni-date">日期</label>
+            <input id="anni-date" type="date" />
+          </div>
+        </div>
+        <label class="field-label" for="anni-remind-days">提前提醒天数</label>
+        <div class="path-row">
+          <input id="anni-remind-days" type="number" min="1" max="7" step="1" placeholder="3" />
+          <button id="btn-save-anni-remind">保存提醒</button>
+        </div>
+        <div class="button-list">
+          <button id="btn-add-anniversary">添加纪念日</button>
+        </div>
+
+        <div id="affection-status" class="status"></div>
+      </div>
+        </div>
+        <div id="settings-memory" class="settings-pane" role="tabpanel" aria-labelledby="tab-memory" tabindex="0" hidden>
+<div class="section">
+        <div class="section-head">
+          <h3>记忆与知识</h3>
+          <span class="section-desc">她记得什么、知道什么</span>
+        </div>
+
+        <div class="sub-title">自动记忆</div>
+        <div class="tiny-note">从聊天中记住你的名字、喜好和事件。固定的记忆会一直保留，直到你主动删除。</div>
+        <div id="memory-list" class="memory-list"></div>
+        <div class="button-list">
+          <button id="btn-clear-auto-memories" class="danger">清空自动记忆</button>
+        </div>
+
+        <div class="sub-title">知识条目（世界信息）</div>
+        <div id="worldbook-list" class="memory-list"></div>
+        <div class="button-list">
+          <button id="btn-add-worldbook">新增条目</button>
+          <button id="btn-make-worldbook-constant">一键常驻</button>
+          <button id="btn-clear-worldbook" class="danger">清空条目</button>
+        </div>
+      </div>
+        </div>
+        <div id="settings-chat" class="settings-pane" role="tabpanel" aria-labelledby="tab-chat" tabindex="0" hidden>
+<div class="section">
+        <div class="section-head">
+          <h3>聊天管理</h3>
+          <span class="section-desc">会话、记录、显示与表情包</span>
+        </div>
+
+        <div class="sub-title">会话管理</div>
+        <div id="session-manager-list" class="memory-list"></div>
+        <div class="button-list">
+          <button id="btn-new-session-panel">新建会话</button>
+        </div>
+
+        <div class="sub-title">聊天记录</div>
+        <label class="field-label" for="history-search">搜索记录</label>
+        <input id="history-search" placeholder="输入关键词过滤当前记录" />
+        <div id="history-list" class="history-list"></div>
+        <div class="button-list">
+          <button id="btn-refresh-history">刷新记录</button>
+          <button id="btn-export-history">导出数据（JSON）</button>
+          <button id="btn-export-history-md">导出文本（Markdown）</button>
+          <button id="btn-export-history-archive">导出完整备份</button>
+          <button id="btn-clear-history-panel" class="danger">清空当前会话</button>
+        </div>
+        <div id="history-status" class="status"></div>
+
+        <div class="sub-title">消息显示</div>
+        <label class="check-row"><input id="detail-show-timestamp" type="checkbox" />显示时间戳</label>
+        <label class="check-row"><input id="detail-show-floor" type="checkbox" />显示消息序号</label>
+        <label class="check-row"><input id="detail-show-duration" type="checkbox" />显示响应耗时</label>
+        <div class="button-list" hidden>
+          <button id="btn-save-message-details" hidden>保存显示选项</button>
+        </div>
+
+        <div class="sub-title">聊天表情包</div>
+        <label class="check-row">
+          <input id="sticker-enabled" type="checkbox" />
+          启用表情包
+        </label>
+        <div class="sticker-basic-grid">
+          <div>
+            <label class="field-label" for="sticker-frequency">发送频率</label>
+            <select id="sticker-frequency">
+              <option value="low">低</option>
+              <option value="normal">中</option>
+              <option value="high">高</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label" for="sticker-global-cooldown">冷却间隔（消息数）</label>
+            <input id="sticker-global-cooldown" type="number" min="0" max="20" step="1" placeholder="2" />
+          </div>
+        </div>
+        <label class="field-label" for="sticker-max-per-reply">单轮最多表情包数</label>
+        <input id="sticker-max-per-reply" type="number" min="0" max="5" step="1" placeholder="2" />
+        <div class="tiny-note">
+          路径可填文件或文件夹，例如：assets/stickers/happy/001.gif 或 assets/stickers/happy/
+        </div>
+        <div class="sub-title">情绪触发规则</div>
+        <div id="sticker-rules" class="sticker-rule-list"></div>
+        <div class="button-list" style="margin-top: 8px;">
+          <button id="btn-add-custom-sticker">新增自定义规则</button>
+          <button id="btn-save-stickers" hidden>保存设置</button>
+        </div>
+        <div id="sticker-status" class="status"></div>
+      </div>
+        </div>
+        <div id="settings-voice" class="settings-pane" role="tabpanel" aria-labelledby="tab-voice" tabindex="0" hidden>
+<div class="section">
+        <div class="section-head">
+          <h3>语音系统</h3>
+          <span class="section-desc">说给你听，也听懂你</span>
+        </div>
+
+        <div class="sub-title">语音回复（TTS）</div>
+        <label class="check-row">
+          <input id="tts-enabled" type="checkbox" />
+          启用语音回复
+        </label>
+        <label class="field-label" for="tts-provider">语音引擎</label>
+        <select id="tts-provider">
+          <option value="indextts">IndexTTS2（本地音色最佳）</option>
+          <option value="edge">Edge TTS（在线免费）</option>
+          <option value="openai">OpenAI 兼容 TTS</option>
+          <option value="auto">自动降级（本地 → Edge → OpenAI）</option>
+        </select>
+        <div id="tts-engine-status" class="tiny-note"></div>
+
+        <label class="field-label" for="tts-edge-voice">Edge 音色</label>
+        <select id="tts-edge-voice">
+          <option value="zh-CN-XiaoxiaoNeural">晓晓（温柔女声）</option>
+          <option value="zh-CN-XiaoyiNeural">晓伊（活泼女声）</option>
+          <option value="zh-CN-YunxiNeural">云希（阳光男声）</option>
+          <option value="zh-CN-YunyangNeural">云扬（播音男声）</option>
+          <option value="zh-CN-liaoning-XiaobeiNeural">晓北（东北女声）</option>
+        </select>
+
+        <div class="sub-title">OpenAI 兼容 TTS（备用引擎）</div>
+        <label class="field-label" for="tts-openai-base-url">服务地址</label>
+        <input id="tts-openai-base-url" placeholder="https://api.siliconflow.cn/v1" />
+        <label class="field-label" for="tts-openai-api-key">访问密钥</label>
+        <input id="tts-openai-api-key" type="password" placeholder="可选" />
+        <div class="inline-grid">
+          <div>
+            <label class="field-label" for="tts-openai-model">模型</label>
+            <input id="tts-openai-model" placeholder="tts-1 / FunAudioLLM/CosyVoice2-0.5B" />
+          </div>
+          <div>
+            <label class="field-label" for="tts-openai-voice">音色</label>
+            <input id="tts-openai-voice" placeholder="alloy / 中文女声" />
+          </div>
+        </div>
+
+        <div class="sub-title">IndexTTS2（本地引擎）</div>
+        <label class="field-label" for="tts-base-url">服务地址</label>
+        <input id="tts-base-url" placeholder="http://127.0.0.1:9000" />
+        <label class="field-label" for="tts-reference-path">音色样本</label>
+        <div class="path-row">
+          <input id="tts-reference-path" placeholder="选择参考音频文件" readonly />
+          <button id="btn-select-tts-reference">选择</button>
+        </div>
+        <label class="field-label" for="tts-emo-method">情感表现</label>
+        <select id="tts-emo-method">
+          <option value="与音色参考音频相同">与音色参考音频相同</option>
+          <option value="使用情感参考音频">使用情感参考音频</option>
+          <option value="使用情感描述文本控制">使用情感描述文本控制</option>
+          <option value="使用情感向量控制">使用情感向量控制</option>
+        </select>
+        <label class="field-label" for="tts-emo-reference-path">情感参考音频</label>
+        <div class="path-row">
+          <input id="tts-emo-reference-path" placeholder="可选" readonly />
+          <button id="btn-select-tts-emo-reference">选择</button>
+        </div>
+        <label class="field-label" for="tts-emo-text">情感描述</label>
+        <input id="tts-emo-text" placeholder="可选" />
+        <div class="inline-grid">
+          <div>
+            <label class="field-label" for="tts-speed">语速</label>
+            <input id="tts-speed" type="number" min="0.5" max="1.5" step="0.05" placeholder="1.0" />
+          </div>
+          <div>
+            <label class="field-label" for="tts-volume">音量</label>
+            <input id="tts-volume" type="number" min="0" max="1" step="0.05" placeholder="1.0" />
+          </div>
+        </div>
+        <div class="button-list" hidden>
+          <button id="btn-save-tts" hidden>保存语音设置</button>
+        </div>
+        <div id="tts-status" class="status"></div>
+
+        <div class="sub-title">语音识别（STT）</div>
+        <label class="check-row">
+          <input id="stt-enabled" type="checkbox" />
+          启用语音输入
+        </label>
+        <label class="field-label" for="stt-base-url">服务地址</label>
+        <input id="stt-base-url" placeholder="http://127.0.0.1:8001" />
+        <label class="field-label" for="stt-path">请求路径</label>
+        <input id="stt-path" placeholder="/v1/audio/transcriptions" />
+        <label class="field-label" for="stt-api-key">访问密钥</label>
+        <input id="stt-api-key" type="password" placeholder="可选" />
+        <div class="inline-grid">
+          <div>
+            <label class="field-label" for="stt-model">识别模型</label>
+            <input id="stt-model" placeholder="faster-whisper" />
+          </div>
+          <div>
+            <label class="field-label" for="stt-language">识别语言</label>
+            <input id="stt-language" placeholder="zh" />
+          </div>
+        </div>
+        <div class="button-list" hidden>
+          <button id="btn-save-stt" hidden>保存语音识别设置</button>
+        </div>
+        <div id="stt-status" class="status"></div>
+      </div>
+        </div>
+        <div id="settings-app" class="settings-pane" role="tabpanel" aria-labelledby="tab-app" tabindex="0" hidden>
+<div class="section">
+        <div class="section-head">
+          <h3>系统设置</h3>
+          <span class="section-desc">启动、存储与应用</span>
+        </div>
+
+        <div class="sub-title">启动与退出</div>
+        <label class="check-row"><input id="auto-launch" type="checkbox" />开机自动启动</label>
+        <div class="button-list">
+          <button id="btn-exit" class="danger">退出应用</button>
+        </div>
+
+        <div class="sub-title">存储维护</div>
+        <div class="button-list">
+          <button id="btn-clear-audio-cache">清理语音缓存</button>
+          <span id="audio-cache-info" class="status"></span>
+        </div>
+
+        <div id="app-status" class="status" role="status"></div>
+        <div class="sub-title">关于</div>
+        <div class="tiny-note">AI 伴侣 · AI Companion<br />由 FuFu 创作</div>
+      </div>
+        </div>
+      </main>
+    </div>
+    <footer class="settings-footer">
+      <span id="settings-save-status" role="status">让陪伴更合你的心意</span>
+      <button id="btn-save-settings" class="primary" disabled>保存设置</button>
+    </footer>
+  </div>
+  <script src="./src/renderer/shared.js"></script>
+  <script src="./panel.js"></script>
+</body>
+</html>

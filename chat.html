@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: file:; media-src 'self' data: file: blob:; connect-src 'self';" />
+  <title>Chat</title>
+
+  <link rel="stylesheet" href="./src/renderer/chat.css" />
+  <link rel="stylesheet" href="./src/renderer/chat-theme.css" />
+</head>
+
+<body>
+  <div id="chat">
+    <div class="top">
+      <div class="title-wrap">
+        <div class="title">♡ 我的伙伴</div>
+        <div id="speaking-dot"></div>
+      </div>
+
+      <div class="chat-meta">
+        <select id="session-select" title="切换会话" aria-label="切换会话"></select>
+      </div>
+
+      <div class="top-actions">
+        <button id="btn-more" title="更多">⋯</button>
+        <button id="btn-panel">设置</button>
+        <button id="btn-close">收起</button>
+      </div>
+    </div>
+
+    <div id="more-menu">
+      <button class="menu-item" data-action="favorites">收藏</button>
+      <button class="menu-item" data-action="new-session">新建会话</button>
+      <div class="menu-separator"></div>
+      <button class="menu-item danger" data-action="clear">清空会话</button>
+    </div>
+
+    <div id="messages-wrap">
+      <div id="messages"></div>
+      <div class="chat-welcome"><div class="welcome-heart" aria-hidden="true">♡</div><h2>今天，想和我说点什么？</h2><p>开心的小事，或是藏着的心情，<br>都可以慢慢告诉我。</p></div>
+
+      <button id="new-message-pill">
+        <span id="new-message-count">1 条新消息</span>
+        <span>↓</span>
+      </button>
+    </div>
+
+    <div id="reply-bar">
+      <div id="reply-preview"></div>
+      <button id="btn-cancel-reply" title="取消引用">×</button>
+    </div>
+
+    <div class="bottom-tools">
+      <button id="btn-image">图片</button>
+      <button id="btn-screen" title="选择屏幕或窗口，确认后作为图片附件发送">识屏</button>
+      <button id="btn-sticker">表情</button>
+    </div>
+
+    <div class="input-bar">
+      <textarea id="input" placeholder="想聊点什么呢…" aria-label="聊天消息"></textarea>
+
+      <button id="btn-mic" class="icon-button" title="语音输入">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="8.2" y="3" width="7.6" height="12" rx="3.8"></rect>
+          <path d="M5.5 11.5a6.5 6.5 0 0 0 13 0"></path>
+          <path d="M12 18v3"></path>
+          <path d="M8.7 21h6.6"></path>
+        </svg>
+      </button>
+
+      <button id="btn-send">发送</button>
+      <button id="btn-stop-generation" hidden>停止</button>
+      <button id="btn-retry-last" hidden>重试</button>
+    </div>
+
+    <div id="status" class="status">
+      <span id="soft-status"></span>
+      <span id="affection-badge" class="affection-badge" title="好感度与打卡">♡</span>
+    </div>
+
+    <div id="sticker-picker">
+      <div class="picker-top">
+        <span>表情库</span>
+        <button id="btn-import-sticker">导入</button>
+      </div>
+      <div id="sticker-grid"></div>
+    </div>
+
+    <div id="favorites-mask"></div>
+
+    <aside id="favorites-panel">
+      <div class="favorites-inner">
+        <div class="favorites-top">
+          <div class="favorites-title">♡ 收藏</div>
+          <button id="btn-close-favorites" class="secondary">×</button>
+        </div>
+
+        <div class="favorite-tabs">
+          <button class="favorite-tab active" data-tab="messages">消息收藏</button>
+          <button class="favorite-tab" data-tab="stickers">表情库</button>
+        </div>
+
+        <div id="favorite-filter-row" class="favorite-filter-row">
+          <button class="favorite-filter active" data-filter="all">全部</button>
+          <button class="favorite-filter" data-filter="text">文字</button>
+          <button class="favorite-filter" data-filter="voice">语音</button>
+          <button class="favorite-filter" data-filter="image">图片</button>
+        </div>
+
+        <div id="favorite-messages-content" class="favorites-content"></div>
+
+        <div id="favorite-stickers-content" class="favorites-content" style="display: none;">
+          <div class="sticker-library-toolbar">
+            <button id="btn-library-import-sticker">导入表情</button>
+          </div>
+          <div id="favorite-sticker-grid"></div>
+        </div>
+      </div>
+    </aside>
+
+    <div id="sticker-editor-mask">
+      <div class="sticker-editor">
+        <div class="editor-title">编辑表情</div>
+
+        <div class="editor-preview">
+          <img id="editor-sticker-preview" alt="sticker" />
+        </div>
+
+        <label class="editor-label" for="editor-sticker-name">名称</label>
+        <input id="editor-sticker-name" class="editor-input" placeholder="给它起个名字" />
+
+        <label class="editor-label" for="editor-sticker-tags">标签</label>
+        <input id="editor-sticker-tags" class="editor-input" placeholder="开心、贴贴、无语..." />
+
+        <label class="editor-label" for="editor-sticker-desc">描述</label>
+        <textarea id="editor-sticker-desc" class="editor-textarea" placeholder="这张表情一般想表达什么"></textarea>
+
+        <div class="editor-actions">
+          <button id="btn-cancel-sticker-edit" class="secondary">取消</button>
+          <button id="btn-save-sticker-edit" class="primary">保存</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="image-preview-mask">
+      <div class="image-preview-card">
+        <button id="btn-close-image-preview">×</button>
+        <img id="preview-image" alt="preview" />
+      </div>
+    </div>
+  </div>
+
+  <div id="context-menu">
+    <button class="menu-item" data-action="copy">复制</button>
+    <button class="menu-item" data-action="reply">引用</button>
+    <button class="menu-item" data-action="favorite">收藏</button>
+    <button class="menu-item" data-action="save-sticker">存到表情库</button>
+    <button class="menu-item" data-action="voice-text">查看文字</button>
+    <div class="menu-separator"></div>
+    <button class="menu-item" data-action="recall">撤回</button>
+  </div>
+
+  <script src="./src/renderer/chat-host.js"></script>
+  <script src="./src/renderer/shared.js"></script>
+  <script src="./chat.js"></script>
+</body>
+</html>

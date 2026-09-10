@@ -1,0 +1,67 @@
+{
+  "name": "live2d-ai-pet",
+  "version": "1.3.0",
+  "author": "FuFu",
+  "description": "AI Companion for Windows — chat, memories, diaries and optional Live2D characters",
+  "main": "main.js",
+  "scripts": {
+    "test": "node scripts/test.js",
+    "start": "node scripts/run-electron.js .",
+    "pack": "node scripts/run-builder.js --dir",
+    "dist": "node scripts/run-builder.js --win nsis"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3",
+    "rcedit": "5.0.2"
+  },
+  "dependencies": {
+    "pixi-live2d-display": "^0.4.0",
+    "pixi.js": "^6.5.10",
+    "ws": "^8.18.3"
+  },
+  "build": {
+    "appId": "com.fufu.live2d-ai-pet",
+    "productName": "AI 伴侣",
+    "electronVersion": "31.7.7",
+    "electronDist": "node_modules/.store/electron@31.7.7/node_modules/electron/dist",
+    "asar": true,
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "**/*",
+      "!build{,/**}",
+      "!release{,/**}",
+      "!outputs{,/**}",
+      "!work{,/**}",
+      "!.npm-cache{,/**}",
+      "!.pnpm-store{,/**}",
+      "!models{,/**}"
+    ],
+    "afterPack": "scripts/after-pack.js",
+    "extraResources": [
+      {
+        "from": "build/icon.ico",
+        "to": "icon.ico"
+      }
+    ],
+    "asarUnpack": [
+      "assets/**"
+    ],
+    "icon": "build/icon.ico",
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
+      "createDesktopShortcut": true
+    }
+  }
+}

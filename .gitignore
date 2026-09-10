@@ -1,0 +1,60 @@
+# Dependencies and build output
+node_modules/
+/release/
+/dist/
+/out/
+/coverage/
+
+# Local caches and temporary work
+.npm-cache/
+.pnpm-store/
+.electron-builder-cache/
+.cache/
+/work/
+/outputs/
+*.log
+*.tmp
+*.bak
+*.old
+*.dmp
+Thumbs.db
+.DS_Store
+
+# Environment and private credentials (keep shareable templates)
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Application data accidentally saved into the repository root
+/userData/
+/user-data/
+/.local/
+/settings.json
+/settings.*.json
+/history.json
+/memories.json
+/worldbook.json
+/favorites.json
+/sessions.json
+
+# Personal exports and backups
+/exports/
+/backups/
+/live2d-ai-pet-config*.json
+/白希聊天记录-*
+
+# Optional local character assets are not public source or bundled application files.
+/models/
+
+# pnpm-lock.yaml, distributable source assets, docs and screenshots remain visible.
+
+# User-provided optional runtime and personal media
+/vendor/live2dcubismcore.min.js
+/assets/user-stickers/
+/assets/stickers/
+/AI伴侣聊天记录-*
